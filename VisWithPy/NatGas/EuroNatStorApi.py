@@ -7,7 +7,7 @@ csv_t = True
 
 if csv_t:
     w = csv.writer(open("dataSets/DE_NatStorage.csv", 'w'))
-    w.writerow(["Country","Date","full (%)"])
+    w.writerow(["Country","Date","full[%]"])
 
 headers = {"x-key": Constants.AGSI_API_KEY}
 url = 'https://agsi.gie.eu/api'
@@ -44,7 +44,7 @@ while start_date <= end_date:
     #print(jprint(req.json()['data'][1]))
 
 
-    for i in range(req.json()['data'][0]['children']):
+    for i in range(len(req.json()['data'][0]['children'])):
         name.append(req.json()['data'][0]['children'][i]['name'])
         full.append(req.json()['data'][0]['children'][i]['full'])
         date_.append(req.json()['data'][0]['children'][i]['gasDayStart'])
