@@ -5,7 +5,7 @@ import pandas as pd
 from dash import Dash, dcc, html, Input, Output
 
 data = (
-    pd.read_csv("dataSets/NatStorage.csv")
+    pd.read_csv("dataSets/NatStorage_Full.csv")
     .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%Y-%m-%d"))
     .sort_values(by="Date")
 )
@@ -82,11 +82,24 @@ app.layout = html.Div(
             ],
             className="wrapper",
         ),
+        html.Div(
+            children=[
+                html.Div(
+                    children = dcc.Graph(
+                        id="in-out-chart", 
+                        config={"displayModeBar":False},
+                    ),
+                    className = "card",
+                ),
+            ],
+            className="wrapper",
+        ),
     ]
 )
 
 @app.callback(
     Output('full-chart', 'figure'),
+    Output('in-out-chart', 'figure'),
     Input('country-filter', 'value'),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
@@ -101,14 +114,16 @@ def update_charts(_country,start_date, end_date):
     
     #f_data = pd.DataFrame(f_data)
     f_data = f_data[0]
+    #f_data.loc[f_data["Withdrawal [GWh/d]"] == '-' ,"Withdrawal [GWh/d]"] = 0
+    #f_data["Withdrawal [GWh/d]"] = pd.to_numeric(f_data["Withdrawal [GWh/d]"])
     
     full_chart_fig = {
         "data": [
             {
                 "x": f_data["Date"],
-                "y": f_data["full[%]"],
+                "y": f_data["Gas in storage [TWh]"],
                 "type": "lines", 
-                "hovertemplate": "%{y:.2f}%<extra></extra>",
+                "hovertemplate": "%{y:.2f}TWh<extra></extra>",
             },
         ],
         "layout": {
@@ -117,13 +132,42 @@ def update_charts(_country,start_date, end_date):
                 "x": 0.05,
                 "xanchor": "left",
             },
-            "xaxis": {"fixedrange": True},
-            "yaxis": {"ticksuffix":".00%", "fixedrange": True},
-            "colorway": ["#17B897"],
+            "xaxis": {"title": "Date","fixedrange": True},
+            "yaxis": {"title": "Gas Storage [TWh]", "fixedrange": True},
+            "colorway": ["#87CEEB"],
         },
     }
     
-    return full_chart_fig
+    inout_chart_fig = {
+        "data": [
+            {
+                "x": f_data["Date"],
+                "y": f_data["Withdrawal [GWh/d]"],
+                "type": "lines", 
+                "name": "Withdrawal",
+                "hovertemplate": "%{y:.2f}GWh/d<extra></extra>",
+            },
+            {
+                "x": f_data["Date"],
+                "y": f_data["Injection [GWh/d]"],
+                "type": "lines", 
+                "name": "Injection",
+                "hovertemplate": "%{y:.2f}GWh/d<extra></extra>",
+            },
+        ],
+        "layout": {
+            "title": {
+                "text": "Injection/Withdrawal of Gas",
+                "x": 0.05,
+                "xanchor": "left",
+            },
+            "xaxis": {"title": "Date","fixedrange": True},
+            "yaxis": {"title": "Gas Input/Output [GWh/d]", "fixedrange": True},
+            "colorway": ["#FF0078","#17B897"],
+        },
+    }
+    
+    return full_chart_fig,inout_chart_fig
 
 if __name__ == "__main__":
     app.run_server(debug=True)

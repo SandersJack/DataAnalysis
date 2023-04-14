@@ -29,7 +29,7 @@ body {
 
 .menu {
     height: 100px;
-    width: 1924px;
+    width: 100%;
     display: flex;
     justify-content: space-evenly;
     padding-top: 24px;
