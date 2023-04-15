@@ -2,10 +2,13 @@ import requests
 import csv
 from datetime import date, timedelta
 import Constants
+import os
+
 
 csv_t = True
 
 if csv_t:
+    os.remove("dataSets/NatStorage_Full.csv") 
     w = csv.writer(open("dataSets/NatStorage_Full.csv", 'w'))
     w.writerow(["Country","Date","Consumption [Twh]","Gas in storage [TWh]","full [%]","Injection [GWh/d]","Injection capacity [GWh/d]","Withdrawal [GWh/d]","Withdrawal capacity [GWh/d]"])
 
@@ -47,7 +50,17 @@ while start_date <= end_date:
         
     print(req.json()['data'][0]['gasDayStart'])
 
-    #print(jprint(req.json()['data'][1]))
+    ##### For EU
+    name.append(req.json()['data'][0]['name'])
+    full.append(req.json()['data'][0]['full'])
+    date_.append(req.json()['data'][0]['gasDayStart'])
+    gas.append(req.json()['data'][0]["gasInStorage"])
+    inj.append(req.json()['data'][0]["injection"])
+    withdraw.append(req.json()['data'][0]["withdrawal"])
+    inj_cap.append(req.json()['data'][0]["injectionCapacity"])
+    withdraw_cap.append(req.json()['data'][0]["withdrawalCapacity"])
+    consumption.append(req.json()['data'][0]["consumption"])
+    w.writerow([name[-1],date_[-1],consumption[-1],gas[-1],full[-1],inj[-1],inj_cap[-1],withdraw[-1],withdraw_cap[-1]])
 
     for i in range(len(req.json()['data'][0]['children'])):
         name.append(req.json()['data'][0]['children'][i]['name'])

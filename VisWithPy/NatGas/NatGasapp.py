@@ -47,7 +47,7 @@ app.layout = html.Div(
                                 {'label': _country, 'value': _country}
                                 for _country in countries
                             ], 
-                            value="Austria", 
+                            value="EU", 
                             clearable=False, 
                             className="dropdown",
                         ),
@@ -94,12 +94,25 @@ app.layout = html.Div(
             ],
             className="wrapper",
         ),
+        html.Div(
+            children=[
+                html.Div(
+                    children = dcc.Graph(
+                        id="consumtion-chart", 
+                        config={"displayModeBar":False},
+                    ),
+                    className = "card",
+                ),
+            ],
+            className="wrapper",
+        ),
     ]
 )
 
 @app.callback(
     Output('full-chart', 'figure'),
     Output('in-out-chart', 'figure'),
+    Output('consumtion-chart', 'figure'),
     Input('country-filter', 'value'),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
@@ -154,6 +167,20 @@ def update_charts(_country,start_date, end_date):
                 "name": "Injection",
                 "hovertemplate": "%{y:.2f}GWh/d<extra></extra>",
             },
+            {
+                "x": f_data["Date"],
+                "y": f_data["Withdrawal capacity [GWh/d]"],
+                "type": "lines", 
+                "name": "Withdrawal Capacity",
+                "hovertemplate": "%{y:.2f}GWh/d<extra></extra>",
+            },
+            {
+                "x": f_data["Date"],
+                "y": f_data["Injection capacity [GWh/d]"],
+                "type": "lines", 
+                "name": "Injection Capacity",
+                "hovertemplate": "%{y:.2f}GWh/d<extra></extra>",
+            },
         ],
         "layout": {
             "title": {
@@ -167,7 +194,28 @@ def update_charts(_country,start_date, end_date):
         },
     }
     
-    return full_chart_fig,inout_chart_fig
+    consumption_chart_fig = {
+        "data": [
+            {
+                "x": f_data["Date"],
+                "y": f_data["Consumption [Twh]"],
+                "type": "lines", 
+                "hovertemplate": "%{y:.2f}TWh<extra></extra>",
+            },
+        ],
+        "layout": {
+            "title": {
+                "text": "Consumption of Natural Gas (annual)",
+                "x": 0.05,
+                "xanchor": "left",
+            },
+            "xaxis": {"title": "Date","fixedrange": True},
+            "yaxis": {"title": "Gas Consumption [TWh]", "fixedrange": True},
+            "colorway": ["#87CEEB"],
+        },
+    }
+    
+    return full_chart_fig,inout_chart_fig,consumption_chart_fig
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(host= '0.0.0.0',debug=True)
