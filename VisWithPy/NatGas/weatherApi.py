@@ -6,14 +6,15 @@ import json
 import os
 import pandas as pd
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 csv_t = True
 
 if csv_t:
-    os.remove("dataSets/CityTemp.csv") 
-    w = csv.writer(open("dataSets/CityTemp.csv", 'w'))
+    #os.remove(dir_path + "/dataSets/CityTemp.csv") 
+    w = csv.writer(open(dir_path +"/dataSets/CityTemp.csv", 'w'))
     w.writerow(["Country","City","Date","tmp_min","tmp_max"])
     
-cities = pd.read_csv("dataSets/eu_cities.csv")
+cities = pd.read_csv(dir_path + "/dataSets/eu_cities.csv")
 
 for index, row in cities.iterrows():
     
