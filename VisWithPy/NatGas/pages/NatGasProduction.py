@@ -19,6 +19,12 @@ data_price = (
     .sort_values(by="Date")
 )
 
+data_export = (
+    pd.read_csv("dataSets/NG_MOVE_EXPC_S1_M.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%d/%m/%Y"))
+    .sort_values(by="Date")
+)
+
 countries = ["United States"]
 
 ex_style = [
@@ -99,6 +105,18 @@ layout = html.Div(
             children=[
                 html.Div(
                     children = dcc.Graph(
+                        id="Export-chart", 
+                        config={"displayModeBar":False},
+                    ),
+                    className = "card",
+                ),
+            ],
+            className="wrapper",
+        ),
+        html.Div(
+            children=[
+                html.Div(
+                    children = dcc.Graph(
                         id="Price-chart", 
                         config={"displayModeBar":False},
                     ),
@@ -112,6 +130,7 @@ layout = html.Div(
 
 @callback(
     Output('Withdrawl-chart', 'figure'),
+    Output('Export-chart', 'figure'),
     Output('Price-chart', 'figure'),
     Input('country-filter', 'value'),
     Input("date-range", "start_date"),
@@ -141,20 +160,49 @@ def update_charts(_country,start_date, end_date):
         },
     }
     
+    export_chart_fig = {
+        "data": [
+            {
+                "x": data_export["Date"],
+                "y": data_export["Liquefied U.S. Natural Gas Exports (MMcf)"],
+                "type": "lines", 
+                "name": "Liquefied Exports",
+                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+            },
+            {
+                "x": data_export["Date"],
+                "y": data_export["U.S. Natural Gas Pipeline Exports (MMcf)"],
+                "type": "lines", 
+                "name": "Pipeline Exports",
+                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+            },
+        ],
+        "layout": {
+            "title": {
+                "text": "Natural Gas Exports",
+                "x": 0.05,
+                "xanchor": "left",
+            },
+            "xaxis": {"title": "Date","fixedrange": True},
+            "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
+            "colorway": ["#A020F0","#71797E"],
+        },
+    }
+    
     price_chart_fig = {
         "data": [
             {
                 "x": data_price["Date"],
                 "y": data_price["Price of Liquefied U.S. Natural Gas Exports (Dollars per Thousand Cubic Feet)"],
                 "type": "lines", 
-                "name": "Liquefied Exports Price",
+                "name": "Liquefied Exports",
                 "hovertemplate": "%{x:%m-%Y}<extra></extra>",
             },
             {
                 "x": data_price["Date"],
                 "y": data_price["Price of U.S. Natural Gas Pipeline Exports (Dollars per Thousand Cubic Feet)"],
                 "type": "lines", 
-                "name": "Pipeline Exports Price",
+                "name": "Pipeline Exports",
                 "hovertemplate": "%{x:%m-%Y}<extra></extra>",
             },
         ],
@@ -172,7 +220,7 @@ def update_charts(_country,start_date, end_date):
     
 
     
-    return full_chart_fig, price_chart_fig
+    return full_chart_fig,export_chart_fig, price_chart_fig
 
 #if __name__ == "__main__":
 #    app.run_server(host= '0.0.0.0',debug=True)
