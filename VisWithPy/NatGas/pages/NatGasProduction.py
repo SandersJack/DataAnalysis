@@ -13,6 +13,12 @@ data = (
     .sort_values(by="Date")
 )
 
+data_price = (
+    pd.read_csv("dataSets/NG_PRI_SUM_DCU_NUS_M.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%d/%m/%Y"))
+    .sort_values(by="Date")
+)
+
 countries = ["United States"]
 
 ex_style = [
@@ -89,11 +95,24 @@ layout = html.Div(
             ],
             className="wrapper",
         ),
+        html.Div(
+            children=[
+                html.Div(
+                    children = dcc.Graph(
+                        id="Price-chart", 
+                        config={"displayModeBar":False},
+                    ),
+                    className = "card",
+                ),
+            ],
+            className="wrapper",
+        ),
     ]
 )
 
 @callback(
     Output('Withdrawl-chart', 'figure'),
+    Output('Price-chart', 'figure'),
     Input('country-filter', 'value'),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
@@ -107,7 +126,7 @@ def update_charts(_country,start_date, end_date):
                 "x": data["Date"],
                 "y": data["U.S. Natural Gas Gross Withdrawals (MMcf)"],
                 "type": "lines", 
-                "hovertemplate": "%{y:.2f}MMcf<extra></extra>",
+                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
             },
         ],
         "layout": {
@@ -122,9 +141,38 @@ def update_charts(_country,start_date, end_date):
         },
     }
     
+    price_chart_fig = {
+        "data": [
+            {
+                "x": data_price["Date"],
+                "y": data_price["Price of Liquefied U.S. Natural Gas Exports (Dollars per Thousand Cubic Feet)"],
+                "type": "lines", 
+                "name": "Liquefied Exports Price",
+                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+            },
+            {
+                "x": data_price["Date"],
+                "y": data_price["Price of U.S. Natural Gas Pipeline Exports (Dollars per Thousand Cubic Feet)"],
+                "type": "lines", 
+                "name": "Pipeline Exports Price",
+                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+            },
+        ],
+        "layout": {
+            "title": {
+                "text": "Natural Gas Price",
+                "x": 0.05,
+                "xanchor": "left",
+            },
+            "xaxis": {"title": "Date","fixedrange": True},
+            "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
+            "colorway": ["#A020F0","#71797E"],
+        },
+    }
+    
 
     
-    return full_chart_fig
+    return full_chart_fig, price_chart_fig
 
 #if __name__ == "__main__":
 #    app.run_server(host= '0.0.0.0',debug=True)
