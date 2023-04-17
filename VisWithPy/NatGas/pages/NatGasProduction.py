@@ -25,7 +25,21 @@ data_export = (
     .sort_values(by="Date")
 )
 
-countries = ["United States"]
+can_data_prod = (
+    pd.read_csv("dataSets/canada-production.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
+    .sort_values(by="Date")
+)
+
+can_data_export = (
+    pd.read_csv("dataSets/canada-import-export.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%d/%m/%Y"))
+    .sort_values(by="Date")
+)
+
+can_data_export = can_data_export.loc[(can_data_export['Flow'] == "Exports") & (can_data_export['Port'] == "Total")]
+
+countries = ["United States", "Canada"]
 
 ex_style = [
     {
@@ -139,84 +153,152 @@ layout = html.Div(
 
 def update_charts(_country,start_date, end_date):
     
-    full_chart_fig = {
-        "data": [
-            {
-                "x": data["Date"],
-                "y": data["U.S. Natural Gas Gross Withdrawals (MMcf)"],
-                "type": "lines", 
-                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
-            },
-        ],
-        "layout": {
-            "title": {
-                "text": "Natural Gas Gross Withdrawals",
-                "x": 0.05,
-                "xanchor": "left",
-            },
-            "xaxis": {"title": "Date","fixedrange": True},
-            "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
-            "colorway": ["#87CEEB"],
-        },
-    }
+    if(_country == "United States"):
     
-    export_chart_fig = {
-        "data": [
-            {
-                "x": data_export["Date"],
-                "y": data_export["Liquefied U.S. Natural Gas Exports (MMcf)"],
-                "type": "lines", 
-                "name": "Liquefied Exports",
-                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+        full_chart_fig = {
+            "data": [
+                {
+                    "x": data["Date"],
+                    "y": data["U.S. Natural Gas Gross Withdrawals (MMcf)"],
+                    "type": "lines", 
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Gross Withdrawals",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
+                "colorway": ["#87CEEB"],
             },
-            {
-                "x": data_export["Date"],
-                "y": data_export["U.S. Natural Gas Pipeline Exports (MMcf)"],
-                "type": "lines", 
-                "name": "Pipeline Exports",
-                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+        }
+        
+        export_chart_fig = {
+            "data": [
+                {
+                    "x": data_export["Date"],
+                    "y": data_export["Liquefied U.S. Natural Gas Exports (MMcf)"],
+                    "type": "lines", 
+                    "name": "Liquefied Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+                {
+                    "x": data_export["Date"],
+                    "y": data_export["U.S. Natural Gas Pipeline Exports (MMcf)"],
+                    "type": "lines", 
+                    "name": "Pipeline Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Exports",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
             },
-        ],
-        "layout": {
-            "title": {
-                "text": "Natural Gas Exports",
-                "x": 0.05,
-                "xanchor": "left",
+        }
+        
+        price_chart_fig = {
+            "data": [
+                {
+                    "x": data_price["Date"],
+                    "y": data_price["Price of Liquefied U.S. Natural Gas Exports (Dollars per Thousand Cubic Feet)"],
+                    "type": "lines", 
+                    "name": "Liquefied Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+                {
+                    "x": data_price["Date"],
+                    "y": data_price["Price of U.S. Natural Gas Pipeline Exports (Dollars per Thousand Cubic Feet)"],
+                    "type": "lines", 
+                    "name": "Pipeline Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Price",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
             },
-            "xaxis": {"title": "Date","fixedrange": True},
-            "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
-            "colorway": ["#A020F0","#71797E"],
-        },
-    }
+        }
     
-    price_chart_fig = {
-        "data": [
-            {
-                "x": data_price["Date"],
-                "y": data_price["Price of Liquefied U.S. Natural Gas Exports (Dollars per Thousand Cubic Feet)"],
-                "type": "lines", 
-                "name": "Liquefied Exports",
-                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+    elif(_country == "Canada"):
+        full_chart_fig = {
+            "data": [
+                {
+                    "x": can_data_prod["Date"],
+                    "y": can_data_prod["Total (mmcf/d)"]*30.437,
+                    "type": "lines", 
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Gross Withdrawals",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
+                "colorway": ["#87CEEB"],
             },
-            {
-                "x": data_price["Date"],
-                "y": data_price["Price of U.S. Natural Gas Pipeline Exports (Dollars per Thousand Cubic Feet)"],
-                "type": "lines", 
-                "name": "Pipeline Exports",
-                "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+        }
+        
+        export_chart_fig = {
+            "data": [
+                {
+                    "x": can_data_export["Date"],
+                    "y": can_data_export["Volume (MCF)"],
+                    "type": "lines", 
+                    "name": "Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Exports",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [Mcf]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
             },
-        ],
-        "layout": {
-            "title": {
-                "text": "Natural Gas Price",
-                "x": 0.05,
-                "xanchor": "left",
+        }
+        
+        price_chart_fig = {
+            "data": [
+                {
+                    "x": can_data_export["Date"],
+                    "y": can_data_export["Price (US$/kCF)"],
+                    "type": "lines", 
+                    "name": "Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Price",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
             },
-            "xaxis": {"title": "Date","fixedrange": True},
-            "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
-            "colorway": ["#A020F0","#71797E"],
-        },
-    }
+        }
     
 
     
