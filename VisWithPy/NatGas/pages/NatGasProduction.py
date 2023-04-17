@@ -114,7 +114,7 @@ layout = html.Div(
                             id="country-filter",
                             options=[
                                 {'label': html.Span( [
-                                    #html.Img(src="/assets/imgs/flagicons/{}.png".format(_country), height=20),
+                                    html.Img(src="/assets/imgs/flagicons/{}.png".format(_country), height=20),
                                     html.Span(_country,style={'font-size': 15, 'padding-left': 10}),
                                 ],
                                 ), 'value': _country}
