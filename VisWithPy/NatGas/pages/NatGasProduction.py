@@ -37,7 +37,15 @@ can_data_export = (
     .sort_values(by="Date")
 )
 
-can_data_export = can_data_export.loc[(can_data_export['Flow'] == "Exports") & (can_data_export['Port'] == "Total")]
+can_data_LNG_export = (
+    pd.read_csv("dataSets/canada-LNG-exports.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%d/%m/%Y"))
+    .sort_values(by="Date")
+)
+
+can_data_LNG_export = can_data_LNG_export.loc[(can_data_LNG_export['Flow'] == "Exports") & (can_data_LNG_export['Terminal'] == "Total")]
+can_data_export = can_data_export.loc[(can_data_export['Flow'] == "Exports") & (can_data_export['Region'] == "Total")]
+
 
 countries = ["United States", "Canada"]
 
@@ -263,6 +271,13 @@ def update_charts(_country,start_date, end_date):
                     "y": can_data_export["Volume (MCF)"],
                     "type": "lines", 
                     "name": "Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+                {
+                    "x": can_data_LNG_export["Date"],
+                    "y": can_data_LNG_export["Volume (MCF)"],
+                    "type": "lines", 
+                    "name": "LNG Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
             ],
