@@ -61,10 +61,25 @@ LNG_Russia_data["MMCF"] = LNG_Russia_data["Million Standard Cubic Metres"]*(1e6/
 pipe_Russia_data = Russia_data.loc[(Russia_data['Type'] == "Pipeline")][["Date","Million Standard Cubic Metres"]]
 pipe_Russia_data["MMCF"] = pipe_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
 
+Qatar_data = (
+    pd.read_csv("dataSets/Qatar-NatGas.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
+    .sort_values(by="Date")
+)
 
-other_data = {"Russia": [prod_Russia_data,LNG_Russia_data,pipe_Russia_data]}
+prod_Qatar_data = Qatar_data.loc[(Qatar_data['Type'] == "Production")][["Date","Million Standard Cubic Metres"]]
+prod_Qatar_data["MMCF"] = prod_Qatar_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
 
-countries = ["United States", "Canada", "Russia"]
+LNG_Qatar_data= Qatar_data.loc[(Qatar_data['Type'] == "LNG")][["Date","Million Standard Cubic Metres"]]
+LNG_Qatar_data["MMCF"] = LNG_Qatar_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
+
+pipe_Qatar_data = Qatar_data.loc[(Qatar_data['Type'] == "Pipeline")][["Date","Million Standard Cubic Metres"]]
+pipe_Qatar_data["MMCF"] = pipe_Qatar_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
+
+
+other_data = {"Russia": [prod_Russia_data,LNG_Russia_data,pipe_Russia_data],"Qatar": [prod_Qatar_data,LNG_Qatar_data,pipe_Qatar_data]}
+
+countries = ["United States", "Canada", "Russia", "Qatar"]
 
 ex_style = [
     {
