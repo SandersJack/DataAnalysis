@@ -46,8 +46,25 @@ can_data_LNG_export = (
 can_data_LNG_export = can_data_LNG_export.loc[(can_data_LNG_export['Flow'] == "Exports") & (can_data_LNG_export['Terminal'] == "Total")]
 can_data_export = can_data_export.loc[(can_data_export['Flow'] == "Exports") & (can_data_export['Region'] == "Total")]
 
+Russia_data = (
+    pd.read_csv("dataSets/russia-NatGas.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
+    .sort_values(by="Date")
+)
 
-countries = ["United States", "Canada"]
+prod_Russia_data = Russia_data.loc[(Russia_data['Type'] == "Production")][["Date","Million Standard Cubic Metres"]]
+prod_Russia_data["MMCF"] = prod_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
+
+LNG_Russia_data= Russia_data.loc[(Russia_data['Type'] == "LNG")][["Date","Million Standard Cubic Metres"]]
+LNG_Russia_data["MMCF"] = LNG_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
+
+pipe_Russia_data = Russia_data.loc[(Russia_data['Type'] == "Pipeline")][["Date","Million Standard Cubic Metres"]]
+pipe_Russia_data["MMCF"] = pipe_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
+
+
+other_data = {"Russia": [prod_Russia_data,LNG_Russia_data,pipe_Russia_data]}
+
+countries = ["United States", "Canada", "Russia"]
 
 ex_style = [
     {
@@ -315,6 +332,72 @@ def update_charts(_country,start_date, end_date):
             },
         }
     
+    else:
+        ch_data = other_data[_country]
+        full_chart_fig = {
+            "data": [
+                {
+                    "x": ch_data[0]["Date"],
+                    "y": ch_data[0]["MMCF"],
+                    "type": "lines", 
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Gross Withdrawals",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
+                "colorway": ["#87CEEB"],
+            },
+        }
+        
+        export_chart_fig = {
+            "data": [
+                {
+                    "x": ch_data[1]["Date"],
+                    "y": ch_data[1]["MMCF"],
+                    "type": "lines", 
+                    "name": "Pipeline Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+                {
+                    "x": ch_data[2]["Date"],
+                    "y": ch_data[2]["MMCF"],
+                    "type": "lines", 
+                    "name": "LNG Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Exports",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [Mcf]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
+            },
+        }
+        
+        price_chart_fig = {
+            "data": [
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Price",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
+            },
+        }
 
     
     return full_chart_fig,export_chart_fig, price_chart_fig
