@@ -194,12 +194,24 @@ layout = html.Div(
 def update_charts(_country,start_date, end_date):
     
     if(_country == "United States"):
-    
+        
+        fdata = data.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        fdata_export = data_export.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        fdata_price = data_price.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
         full_chart_fig = {
             "data": [
                 {
-                    "x": data["Date"],
-                    "y": data["U.S. Natural Gas Gross Withdrawals (MMcf)"],
+                    "x": fdata["Date"],
+                    "y": fdata["U.S. Natural Gas Gross Withdrawals (MMcf)"],
                     "type": "lines", 
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
@@ -219,15 +231,15 @@ def update_charts(_country,start_date, end_date):
         export_chart_fig = {
             "data": [
                 {
-                    "x": data_export["Date"],
-                    "y": data_export["Liquefied U.S. Natural Gas Exports (MMcf)"],
+                    "x": fdata_export["Date"],
+                    "y": fdata_export["Liquefied U.S. Natural Gas Exports (MMcf)"],
                     "type": "lines", 
                     "name": "Liquefied Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
                 {
-                    "x": data_export["Date"],
-                    "y": data_export["U.S. Natural Gas Pipeline Exports (MMcf)"],
+                    "x": fdata_export["Date"],
+                    "y": fdata_export["U.S. Natural Gas Pipeline Exports (MMcf)"],
                     "type": "lines", 
                     "name": "Pipeline Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
@@ -248,15 +260,15 @@ def update_charts(_country,start_date, end_date):
         price_chart_fig = {
             "data": [
                 {
-                    "x": data_price["Date"],
-                    "y": data_price["Price of Liquefied U.S. Natural Gas Exports (Dollars per Thousand Cubic Feet)"],
+                    "x": fdata_price["Date"],
+                    "y": fdata_price["Price of Liquefied U.S. Natural Gas Exports (Dollars per Thousand Cubic Feet)"],
                     "type": "lines", 
                     "name": "Liquefied Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
                 {
-                    "x": data_price["Date"],
-                    "y": data_price["Price of U.S. Natural Gas Pipeline Exports (Dollars per Thousand Cubic Feet)"],
+                    "x": fdata_price["Date"],
+                    "y": fdata_price["Price of U.S. Natural Gas Pipeline Exports (Dollars per Thousand Cubic Feet)"],
                     "type": "lines", 
                     "name": "Pipeline Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
@@ -275,11 +287,25 @@ def update_charts(_country,start_date, end_date):
         }
     
     elif(_country == "Canada"):
+        
+        fcan_data_prod = can_data_prod.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        fcan_data_export = can_data_export.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        fcan_data_LNG_export = can_data_LNG_export.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        
         full_chart_fig = {
             "data": [
                 {
-                    "x": can_data_prod["Date"],
-                    "y": can_data_prod["Total (mmcf/d)"]*30.437,
+                    "x": fcan_data_prod["Date"],
+                    "y": fcan_data_prod["Total (mmcf/d)"]*30.437,
                     "type": "lines", 
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
@@ -299,15 +325,15 @@ def update_charts(_country,start_date, end_date):
         export_chart_fig = {
             "data": [
                 {
-                    "x": can_data_export["Date"],
-                    "y": can_data_export["Volume (MCF)"],
+                    "x": fcan_data_export["Date"],
+                    "y": fcan_data_export["Volume (MCF)"],
                     "type": "lines", 
                     "name": "Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
                 {
-                    "x": can_data_LNG_export["Date"],
-                    "y": can_data_LNG_export["Volume (MCF)"],
+                    "x": fcan_data_LNG_export["Date"],
+                    "y": fcan_data_LNG_export["Volume (MCF)"],
                     "type": "lines", 
                     "name": "LNG Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
@@ -328,8 +354,8 @@ def update_charts(_country,start_date, end_date):
         price_chart_fig = {
             "data": [
                 {
-                    "x": can_data_export["Date"],
-                    "y": can_data_export["Price (US$/kCF)"],
+                    "x": fcan_data_export["Date"],
+                    "y": fcan_data_export["Price (US$/kCF)"],
                     "type": "lines", 
                     "name": "Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
@@ -349,11 +375,27 @@ def update_charts(_country,start_date, end_date):
     
     else:
         ch_data = other_data[_country]
+        
+        fch_data = [0]*3
+        
+        fch_data[0] = ch_data[0].query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        fch_data[1] = ch_data[1].query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        fch_data[2] = ch_data[2].query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        
         full_chart_fig = {
             "data": [
                 {
-                    "x": ch_data[0]["Date"],
-                    "y": ch_data[0]["MMCF"],
+                    "x": fch_data[0]["Date"],
+                    "y": fch_data[0]["MMCF"],
                     "type": "lines", 
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
@@ -373,15 +415,15 @@ def update_charts(_country,start_date, end_date):
         export_chart_fig = {
             "data": [
                 {
-                    "x": ch_data[1]["Date"],
-                    "y": ch_data[1]["MMCF"],
+                    "x": fch_data[1]["Date"],
+                    "y": fch_data[1]["MMCF"],
                     "type": "lines", 
                     "name": "Pipeline Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
                 {
-                    "x": ch_data[2]["Date"],
-                    "y": ch_data[2]["MMCF"],
+                    "x": fch_data[2]["Date"],
+                    "y": fch_data[2]["MMCF"],
                     "type": "lines", 
                     "name": "LNG Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
