@@ -8,8 +8,31 @@ body {
 
 .header {
     background-color: #87CEEB;
-    height: 256px;
+    height: 150px;
     padding: 16px 0 0 0;
+}
+
+.page-top {
+    background-color: #87CEEB; 
+    text-align: center;
+}
+
+.nav-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+.nav-bar {
+    display: inline;
+    margin: 0 3rem;
+    justify-content: space-around;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #87CEEB;
 }
 
 .header-flag {
@@ -20,6 +43,15 @@ body {
 
 .header-title {
     font-size: 48px;
+    color: #FFFFFF;
+    font-weight:bold;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 10px;
+}
+
+.sub-header-title {
+    font-size: 30px;
     color: #FFFFFF;
     font-weight:bold;
     text-align: center;

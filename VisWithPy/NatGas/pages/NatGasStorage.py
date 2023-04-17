@@ -33,8 +33,8 @@ layout = html.Div(
         html.Div(
             children=[
                 html.H1(
-                    children="Natural Gas Analytics",
-                    className="header-title"
+                    children="Storage Data",
+                    className="sub-header-title"
                 ),
             ],
             className="header",
