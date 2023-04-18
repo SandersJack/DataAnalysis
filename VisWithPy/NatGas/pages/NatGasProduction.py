@@ -57,13 +57,8 @@ countries = ["United States", "Canada"]
 
 for col in world_data.columns:
     if "exports" in col:
-        countries.append(col[24:-8])
-        country_list.append(col[24:-8])
-    
-
-
-
-
+        countries.append(col[25:-8])
+        country_list.append(col[25:-8])
 
 ex_style = [
     {
@@ -363,8 +358,8 @@ def update_charts(_country,start_date, end_date):
         "Date >= @start_date and Date <= @end_date"
         )
         
-        prod_name = "Dry 0tural gas production, {}, Annual".format(_country)
-        export_name = "Dry 0tural gas exports, {}, Annual".format(_country)
+        prod_name = "Dry natural gas production, {}, Annual".format(_country)
+        export_name = "Dry natural gas exports, {}, Annual".format(_country)
         
         full_chart_fig = {
             "data": [
