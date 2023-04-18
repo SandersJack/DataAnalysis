@@ -12,6 +12,20 @@ body {
     padding: 16px 0 0 0;
 }
 
+.home-sub-title {
+    background-color: #87CEEB;
+    height: 70px;
+    padding: 16px 0 0 0;
+}
+
+.home-sub-sub-heading {
+    margin-top: 5px;
+}
+
+.home-context {
+    padding: 10px;
+}
+
 .page-top {
     background-color: #87CEEB; 
     text-align: center;
@@ -82,6 +96,44 @@ body {
     padding-right: 10px;
     padding-left: 10px;
     margin-top: 32px;
+}
+
+.home-wrapper {
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 1924px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-top: 32px;
+}
+
+.home-card {
+    max-width: 900px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
+}
+
+#prod{
+    float: left;
+    width: 50%; 
+}
+
+#prodText {
+    float: right;
+    width: 50%;
+    height: 500px;
+}
+
+#res {
+    float: right;
+    width: 50%;
+}
+
+#resText {
+    margin-top:50px;
+    float: left;
+    width: 50%;
+    height: 450px;
 }
 
 .card {
