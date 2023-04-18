@@ -79,7 +79,24 @@ pipe_Qatar_data["MMCF"] = pipe_Qatar_data["Million Standard Cubic Metres"]*(1e6/
 
 other_data = {"Russia": [prod_Russia_data,LNG_Russia_data,pipe_Russia_data],"Qatar": [prod_Qatar_data,LNG_Qatar_data,pipe_Qatar_data]}
 
+world_data = (
+    pd.read_csv("dataSets/world-data.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%Y"))
+    .sort_values(by="Date")
+)
+
+country_list = []
 countries = ["United States", "Canada", "Russia", "Qatar"]
+
+for col in world_data.columns:
+    if "exports" in col:
+        countries.append(col[24:-8])
+        country_list.append(col[24:-8])
+    
+
+
+
+
 
 ex_style = [
     {
@@ -120,7 +137,7 @@ layout = html.Div(
                                 ), 'value': _country}
                                 for _country in countries
                                 ],
-                            value="United States", 
+                            value="World", 
                             clearable=False, 
                             className="dropdown",
                         ),
@@ -373,7 +390,7 @@ def update_charts(_country,start_date, end_date):
             },
         }
     
-    else:
+    elif (_country ==  "Russia" or _country ==  "Qatar"):
         ch_data = other_data[_country]
         
         fch_data = [0]*3
@@ -437,6 +454,73 @@ def update_charts(_country,start_date, end_date):
                 },
                 "xaxis": {"title": "Date","fixedrange": True},
                 "yaxis": {"title": "Gas Gross Withdrawals [Mcf]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
+            },
+        }
+        
+        price_chart_fig = {
+            "data": [
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Price",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
+                "colorway": ["#A020F0","#71797E"],
+            },
+        }
+        
+    else:
+        
+        fworld_data = world_data.query(
+        "Date >= @start_date and Date <= @end_date"
+        )
+        
+        prod_name = "Dry 0tural gas production, {}, Annual".format(_country)
+        export_name = "Dry 0tural gas exports, {}, Annual".format(_country)
+        
+        full_chart_fig = {
+            "data": [
+                {
+                    "x": fworld_data["Date"],
+                    "y": fworld_data[prod_name],
+                    "type": "lines", 
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Gross Withdrawals",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Gross Withdrawals [Bcf]", "fixedrange": True},
+                "colorway": ["#87CEEB"],
+            },
+        }
+        
+        export_chart_fig = {
+            "data": [
+                {
+                    "x": fworld_data["Date"],
+                    "y": fworld_data[export_name],
+                    "type": "lines", 
+                    "name": "Exports",
+                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
+                },
+            ],
+            "layout": {
+                "title": {
+                    "text": "Natural Gas Exports",
+                    "x": 0.05,
+                    "xanchor": "left",
+                },
+                "xaxis": {"title": "Date","fixedrange": True},
+                "yaxis": {"title": "Gas Annul Exports [Bcf]", "fixedrange": True},
                 "colorway": ["#A020F0","#71797E"],
             },
         }
