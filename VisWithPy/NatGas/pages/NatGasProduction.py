@@ -46,39 +46,6 @@ can_data_LNG_export = (
 can_data_LNG_export = can_data_LNG_export.loc[(can_data_LNG_export['Flow'] == "Exports") & (can_data_LNG_export['Terminal'] == "Total")]
 can_data_export = can_data_export.loc[(can_data_export['Flow'] == "Exports") & (can_data_export['Region'] == "Total")]
 
-Russia_data = (
-    pd.read_csv("dataSets/russia-NatGas.csv")
-    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
-    .sort_values(by="Date")
-)
-
-prod_Russia_data = Russia_data.loc[(Russia_data['Type'] == "Production")][["Date","Million Standard Cubic Metres"]]
-prod_Russia_data["MMCF"] = prod_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
-
-LNG_Russia_data= Russia_data.loc[(Russia_data['Type'] == "LNG")][["Date","Million Standard Cubic Metres"]]
-LNG_Russia_data["MMCF"] = LNG_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
-
-pipe_Russia_data = Russia_data.loc[(Russia_data['Type'] == "Pipeline")][["Date","Million Standard Cubic Metres"]]
-pipe_Russia_data["MMCF"] = pipe_Russia_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
-
-Qatar_data = (
-    pd.read_csv("dataSets/Qatar-NatGas.csv")
-    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%m/%d/%Y"))
-    .sort_values(by="Date")
-)
-
-prod_Qatar_data = Qatar_data.loc[(Qatar_data['Type'] == "Production")][["Date","Million Standard Cubic Metres"]]
-prod_Qatar_data["MMCF"] = prod_Qatar_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
-
-LNG_Qatar_data= Qatar_data.loc[(Qatar_data['Type'] == "LNG")][["Date","Million Standard Cubic Metres"]]
-LNG_Qatar_data["MMCF"] = LNG_Qatar_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
-
-pipe_Qatar_data = Qatar_data.loc[(Qatar_data['Type'] == "Pipeline")][["Date","Million Standard Cubic Metres"]]
-pipe_Qatar_data["MMCF"] = pipe_Qatar_data["Million Standard Cubic Metres"]*(1e6/28316.846592)
-
-
-other_data = {"Russia": [prod_Russia_data,LNG_Russia_data,pipe_Russia_data],"Qatar": [prod_Qatar_data,LNG_Qatar_data,pipe_Qatar_data]}
-
 world_data = (
     pd.read_csv("dataSets/world-data.csv")
     .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%Y"))
@@ -86,7 +53,7 @@ world_data = (
 )
 
 country_list = []
-countries = ["United States", "Canada", "Russia", "Qatar"]
+countries = ["United States", "Canada"]
 
 for col in world_data.columns:
     if "exports" in col:
@@ -377,89 +344,6 @@ def update_charts(_country,start_date, end_date):
                     "name": "Exports",
                     "hovertemplate": "%{x:%m-%Y}<extra></extra>",
                 },
-            ],
-            "layout": {
-                "title": {
-                    "text": "Natural Gas Price",
-                    "x": 0.05,
-                    "xanchor": "left",
-                },
-                "xaxis": {"title": "Date","fixedrange": True},
-                "yaxis": {"title": "Natural Gas Price [$/kCF]", "fixedrange": True},
-                "colorway": ["#A020F0","#71797E"],
-            },
-        }
-    
-    elif (_country ==  "Russia" or _country ==  "Qatar"):
-        ch_data = other_data[_country]
-        
-        fch_data = [0]*3
-        
-        fch_data[0] = ch_data[0].query(
-        "Date >= @start_date and Date <= @end_date"
-        )
-        
-        fch_data[1] = ch_data[1].query(
-        "Date >= @start_date and Date <= @end_date"
-        )
-        
-        fch_data[2] = ch_data[2].query(
-        "Date >= @start_date and Date <= @end_date"
-        )
-        
-        
-        full_chart_fig = {
-            "data": [
-                {
-                    "x": fch_data[0]["Date"],
-                    "y": fch_data[0]["MMCF"],
-                    "type": "lines", 
-                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
-                },
-            ],
-            "layout": {
-                "title": {
-                    "text": "Natural Gas Gross Withdrawals",
-                    "x": 0.05,
-                    "xanchor": "left",
-                },
-                "xaxis": {"title": "Date","fixedrange": True},
-                "yaxis": {"title": "Gas Gross Withdrawals [MMcf]", "fixedrange": True},
-                "colorway": ["#87CEEB"],
-            },
-        }
-        
-        export_chart_fig = {
-            "data": [
-                {
-                    "x": fch_data[1]["Date"],
-                    "y": fch_data[1]["MMCF"],
-                    "type": "lines", 
-                    "name": "Pipeline Exports",
-                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
-                },
-                {
-                    "x": fch_data[2]["Date"],
-                    "y": fch_data[2]["MMCF"],
-                    "type": "lines", 
-                    "name": "LNG Exports",
-                    "hovertemplate": "%{x:%m-%Y}<extra></extra>",
-                },
-            ],
-            "layout": {
-                "title": {
-                    "text": "Natural Gas Exports",
-                    "x": 0.05,
-                    "xanchor": "left",
-                },
-                "xaxis": {"title": "Date","fixedrange": True},
-                "yaxis": {"title": "Gas Gross Withdrawals [Mcf]", "fixedrange": True},
-                "colorway": ["#A020F0","#71797E"],
-            },
-        }
-        
-        price_chart_fig = {
-            "data": [
             ],
             "layout": {
                 "title": {
