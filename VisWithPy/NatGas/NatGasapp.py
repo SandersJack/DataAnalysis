@@ -3,7 +3,7 @@ from dash import Dash, dcc, html, Input, Output
 
 app = Dash(__name__, use_pages=True)
 
-pages = ["Natural Gas Storage", "Natural Gas Production"]
+pages = ["Home","Natural Gas Storage", "Natural Gas Production"]
 
 app.layout = html.Div([
     html.Div(
@@ -15,13 +15,19 @@ app.layout = html.Div([
         [
             html.Div(
                 dcc.Link(
-                    pages[0], href="/natgasstorage", className="nav-link"
+                    pages[0], href="/", className="nav-link"
                 ),
                 className="nav-bar"
             ),
             html.Div(
                 dcc.Link(
-                    pages[1], href="/natgasproduction", className="nav-link"
+                    pages[1], href="/natgasstorage", className="nav-link"
+                ),
+                className="nav-bar"
+            ),
+            html.Div(
+                dcc.Link(
+                    pages[2], href="/natgasproduction", className="nav-link"
                 ),
                 className="nav-bar"
             ),
