@@ -122,6 +122,7 @@ body {
     float: right;
     width: 50%;
     height: 500px;
+    padding: 10px;
 }
 
 #res {

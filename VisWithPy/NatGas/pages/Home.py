@@ -82,7 +82,19 @@ layout = html.Div(children=[
                             className = "home-card",
                             id = "prod",
                         ),
-                        html.Div(children=["BHA"],id="prodText"),
+                        html.Div(children=[
+                            html.P(children='''Natural Gas is produced across the world in all seven inhabited continents. 
+                                   Two states dominate the world's production; The United States of America and Russia. The largest production can be found in North America. There are several ways Natural Gas can be produced/extracted:'''),
+                            html.P(children='''There are a number of ways Natural Gas can be produced/extracted:'''),
+                            html.H3(children="Conventional Extraction:"),
+                            html.P(children='''Natural Gas can be found together with oil under a permeable layer of rock. 
+                                   This is beneficial as this allows both the extraction of Natural Gas and oil, reducing the cost.'''),
+                            html.H3(children="Un-Conventional Extraction:"),
+                            html.P(children='''This gas is found deep underground, making it expensive and practically tricky. Only because of recent advancements has this option become more viable. 
+                                   One type of extraction you might be aware of is fracking, which is the process of extracting Tight Gas. 
+                                   Now this is controversial in the UK due to its links to earthquakes.'''),
+                            html.P(children='''These unconventional methods of production will become more previlent as the cheaper and easier to extract Natural Gas reserves run out.'''),
+                            ],id="prodText"),
                         html.Div(children=["BHA"],id="resText"),
                         html.Div(
                             html.Div(
