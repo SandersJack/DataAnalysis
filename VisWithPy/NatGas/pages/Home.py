@@ -44,6 +44,7 @@ layout = html.Div(children=[
             ),
     html.Div(children=[
                 html.H2(children='Natural Gas Production', className="home-sub-sub-heading"),
+                html.Div(children=[
                 html.Div(
                     children=[
                         html.Div(
@@ -95,8 +96,11 @@ layout = html.Div(children=[
                                    Now this is controversial in the UK due to its links to earthquakes.'''),
                             html.P(children='''These unconventional methods of production will become more previlent as the cheaper and easier to extract Natural Gas reserves run out.'''),
                             ],id="prodText"),
-                        html.Div(children=["BHA"],id="resText"),
-                        html.Div(
+                        ], className="top-prod"),
+                        html.Div(children=[
+                            html.H3(children="Proven Reserves:"),
+                            html.P(children='''The largest proven Natural Gas reserves can be found in the Middle East and Eurasia. Mainly located in Russia, Iran and Qatar, making up just over half of the worlds proven supplies. 
+                                   As mentioned above there is the possibly of these reserves to increase as technology imporves to extract harder to get Natural Gas. But it is still a finite resource that will one day run out'''),
                             html.Div(
                             children = dcc.Graph(
                                 id="cont-storage-chart", 
@@ -133,6 +137,50 @@ layout = html.Div(children=[
                             className = "home-card",
                             id="res",
                             ),
+                            ],id="resText"),
+                        html.Div( children = [
+                            html.Div(
+                            children = dcc.Graph(
+                                id="full-export-chart", 
+                                config={"displayModeBar":False},
+                                figure={
+                                    "data": [
+                                        {
+                                            "x": cont_data["Date"],
+                                            "y": cont_data["Dry natural gas exports,{}, Annual".format(continent)],
+                                            "type": "bar",
+                                            "name": continent,                          
+                                            "hovertemplate": (
+                                                "%{y:.2f}<extra></extra>"
+                                            ),
+                                        }
+                                        for continent in continents
+                                    ],
+                                    "layout": {
+                                        "title": {
+                                            "text": "Natural Gas Export by Continent",
+                                            "x": 0.05,
+                                            "xanchor": "left",
+                                        },
+                                        "xaxis": {"fixedrange": True},
+                                        "yaxis": {
+                                            "title": "Yearly Export[TCF]",
+                                            "fixedrange": True,
+                                        },
+                                        #"colorway": ["#17b897"],
+                                        "barmode": "stack"
+                                    },
+                                },
+                            ),
+                            
+                            className = "home-card",
+                            ),
+                        html.H3(children="Exports:"),
+                        html.P(children='''Even though The United States produces the most Natural Gas, it barely exports it. 
+                                   This is due to a couple of factors: 1) It is one of the biggest consumers of Natural Gas, so its domestic demand still outpaces its production. And 2) they are far away from other large consumers of Natural Gas. Meaning that it needs to be exported as Liquified Natural Gas (LNG) by ship, which is expensive.
+                                   Making their Gas more costly for European customers, for example, who previously could buy Russian Gas at a lower price due to the extensive European pipeline network.'''),
+                        ],
+                                 id="export-chart",
                         ),
                         
                     ],
