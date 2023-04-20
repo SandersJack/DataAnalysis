@@ -39,8 +39,19 @@ layout = html.Div(children=[
         ),
     html.Div(children=[
            html.H2(children='Natural Gas Storage'),
+           html.Div(children=[
+                html.P('''Demand for Natural Gas can vary across the year, mainly dependent on temperature. In Europe, this is more apparent due to the cold winters and mild summers (But this could change as global temperature trends upwards!).
+                       When the weather is cold, natural gas consumption increases due to the electricity demand associated with heating homes/businesses. In the hotter months, 
+                       Natural Gas consumption will increase due to the electricity demand associated with cooling homes and businesses with Air Conditioning. However, usually, the demand in the winter is much greater. 
+                       If countries/companies didn't store any Natural Gas and only used it from the free market, the price would also fluctuate drastically due to the increased demand and steady supply'''),
+                html.P('''Natural Gas Storage can be classified into underground and surface storage. Underground is the most extensively used because of the larger storage sizes, utilising old mines or old Gas/Oil deposits to store Gas. 
+                       Surface storage is used less and is usually more expensive, requiring large pressurised storage tanks to be used. These are more likely to be used by companies rather than countries.'''),
+                html.P(children='''In the Natural Gas Storage section, you will find Natural Gas storage data for European countries between March 2011 to March 2023. Data includes Natural Gas storage levels, Injection and withdrawals and bi-annual consumption.'''),
+            ], className="storage-text"
+            ), 
             ],
-            className="card"
+            className="home-wrapper", 
+            id="storage"
             ),
     html.Div(children=[
                 html.H2(children='Natural Gas Production', className="home-sub-sub-heading"),
@@ -85,7 +96,7 @@ layout = html.Div(children=[
                         ),
                         html.Div(children=[
                             html.P(children='''Natural Gas is produced across the world in all seven inhabited continents. 
-                                   Two states dominate the world's production; The United States of America and Russia. The largest production can be found in North America. There are several ways Natural Gas can be produced/extracted:'''),
+                                   Two states dominate the world's production; The United States of America (USA) and Russia. The largest production can be found in North America. There are several ways Natural Gas can be produced/extracted:'''),
                             html.P(children='''There are a number of ways Natural Gas can be produced/extracted:'''),
                             html.H3(children="Conventional Extraction:"),
                             html.P(children='''Natural Gas can be found together with oil under a permeable layer of rock. 
@@ -95,6 +106,8 @@ layout = html.Div(children=[
                                    One type of extraction you might be aware of is fracking, which is the process of extracting Tight Gas. 
                                    Now this is controversial in the UK due to its links to earthquakes.'''),
                             html.P(children='''These unconventional methods of production will become more previlent as the cheaper and easier to extract Natural Gas reserves run out.'''),
+                            html.P(children='''In the production tab you will find yearly extraction (withdrawls) and export data. As well as a monthly reports for the USA and Canada'''),
+
                             ],id="prodText"),
                         ], className="top-prod"),
                         html.Div(children=[

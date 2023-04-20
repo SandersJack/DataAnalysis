@@ -113,6 +113,15 @@ body {
     box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.18);
 }
 
+#storage {
+    padding: 10px;
+}
+
+.storage-text {
+    padding: 10px;
+    border:2px solid #87CEEB;; 
+}
+
 .top-prod {
     margin-bottom: 10px;
     padding: 10px;
