@@ -159,8 +159,8 @@ layout = html.Div(children=[
                                 figure={
                                     "data": [
                                         {
-                                            "x": cont_data["Date"],
-                                            "y": cont_data["Dry natural gas exports,{}, Annual".format(continent)],
+                                            "x": cont_data["Date"].loc[(cont_data["Date"] >= "1990")],
+                                            "y": cont_data["Dry natural gas exports,{}, Annual".format(continent)].loc[(cont_data["Date"] >= "1990")],
                                             "type": "bar",
                                             "name": continent,                          
                                             "hovertemplate": (
