@@ -24,7 +24,7 @@ layout = html.Div(children=[
         children=[
             html.P(
                 children='''Hello and welcome to this dash-board. 
-             This website is for visulising data on Natural Gas colected form Free sources on the Web. 
+             This website is for visulising data on Natural Gas colected from free sources on the Web. 
              This consists of two sections: '''
              ),
             html.Ul(children=[
@@ -32,8 +32,11 @@ layout = html.Div(children=[
                 html.Li(children="Natural Gas Production"),
             ]),
             html.P(
-                children='''Currently Natural Gas stoage and prices are in the news due to number 
-                of factors which I will try to visulise in this website. '''
+                children='''Currently Natural Gas storage and prices are in the news due to number 
+                of factors, such as supply constraints and a number of political issues which I will try to visulise in this website. 
+                Currently there is a need to improve the anaylsis of the data but this will be done at a later date. 
+                Natural Gas is seen as a cleaner fossil fuel when compared to coal and oil and is being use more as the world pivots to cleaner methods of producing energy. 
+                However due to certain events, the fragitily of Natural Gas markets has exposed people the wild price which has been a driving factor of inflation.'''
              ),
             ], className="home-context",
         ),
@@ -199,7 +202,9 @@ layout = html.Div(children=[
                     ],
                 ),
             ],
-            className="home-wrapper"
+            className="home-wrapper",
+            id="home2",
             ),
-    ]
+    html.Div(children=[], className="home-footer"),
+    ],
 )

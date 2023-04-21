@@ -23,7 +23,9 @@ body {
 }
 
 .home-context {
+    margin: 10px;
     padding: 10px;
+    border:2px solid #87CEEB; 
 }
 
 .page-top {
@@ -107,6 +109,10 @@ body {
     margin-top: 32px;
 }
 
+#home2 {
+    height:1270px;
+}
+
 .home-card {
     max-width: 900px;
     margin-bottom: 24px;
@@ -119,14 +125,14 @@ body {
 
 .storage-text {
     padding: 10px;
-    border:2px solid #87CEEB;; 
+    border:2px solid #87CEEB; 
 }
 
 .top-prod {
     margin-bottom: 10px;
     padding: 10px;
     height: 460px;
-    border:2px solid #87CEEB;;
+    border:2px solid #87CEEB;
 }
 
 #prod{
@@ -146,7 +152,7 @@ body {
     float: right;
     width: 47%;
     padding: 1%;
-    border:2px solid #87CEEB;;
+    border:2px solid #87CEEB;
     height: 670px;
 }
 
@@ -154,7 +160,7 @@ body {
     padding: 1%;
     float: left;
     width: 47%;
-    border:2px solid #87CEEB;;
+    border:2px solid #87CEEB;
     height: 670px;
 }
 
@@ -175,4 +181,9 @@ body {
 
 .Select--multi .Select-value-label {
     line-height: 48px;
+}
+
+.home-footer {
+    color: #87CEEB;
+    height: 70px;
 }
