@@ -13,6 +13,12 @@ data = (
     .sort_values(by="Date")
 )
 
+temp_data = (
+    pd.read_csv("dataSets/CityTemp.csv")
+    .assign(Date=lambda data: pd.to_datetime(data["Date"], format="%Y-%m-%d"))
+    .sort_values(by="Date")
+)
+
 countries = data['Country'].sort_values().unique()
 
 ex_style = [
@@ -113,6 +119,18 @@ layout = html.Div(
             ],
             className="wrapper",
         ),
+        html.Div(
+            children=[
+                html.Div(
+                    children = dcc.Graph(
+                        id="temp-chart", 
+                        config={"displayModeBar":False},
+                    ),
+                    className = "card",
+                ),
+            ],
+            className="wrapper",
+        ),
     ]
 )
 
@@ -120,6 +138,7 @@ layout = html.Div(
     Output('full-chart', 'figure'),
     Output('in-out-chart', 'figure'),
     Output('consumtion-chart', 'figure'),
+    Output('temp-chart', 'figure'),
     Input('country-filter', 'value'),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
@@ -136,6 +155,17 @@ def update_charts(_country,start_date, end_date):
     f_data = f_data[0]
     #f_data.loc[f_data["Withdrawal [GWh/d]"] == '-' ,"Withdrawal [GWh/d]"] = 0
     #f_data["Withdrawal [GWh/d]"] = pd.to_numeric(f_data["Withdrawal [GWh/d]"])
+    
+    f_temp_data = temp_data.query(
+        "Country == @_country"
+        " and Date >= @start_date and Date <= @end_date"
+    ),
+    
+    f_temp_data = f_temp_data[0]
+    
+    cities = f_temp_data['City'].sort_values().unique()
+    
+    temps = ["tmp_min","tmp_max"]
     
     full_chart_fig = {
         "data": [
@@ -222,7 +252,32 @@ def update_charts(_country,start_date, end_date):
         },
     }
     
-    return full_chart_fig,inout_chart_fig,consumption_chart_fig
+    temp_chart_fig = {
+        "data": [
+            {
+                "x": f_temp_data.loc[f_temp_data["City"] == city ,"Date"],
+                "y": f_temp_data.loc[f_temp_data["City"] == city , tmp],
+                "type": "lines", 
+                
+                "name": "{} {} temp".format(city,tmp[-3:]),
+                "hovertemplate": "%{y:.2f}°C<extra></extra>",
+            }
+            for city in cities
+                for tmp in temps
+        ],
+        "layout": {
+            "title": {
+                "text": "Daily Temperature of Major Cities",
+                "x": 0.05,
+                "xanchor": "left",
+            },
+            "xaxis": {"title": "Date","fixedrange": True},
+            "yaxis": {"title": "Temperature [°C]", "fixedrange": True},
+            #"colorway": ["#87CEEB"],
+        },
+    }
+    
+    return full_chart_fig,inout_chart_fig,consumption_chart_fig, temp_chart_fig
 
 #if __name__ == "__main__":
 #    app.run_server(host= '0.0.0.0',debug=True)
