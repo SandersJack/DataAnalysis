@@ -53,12 +53,14 @@ world_data = (
 )
 
 country_list = []
-countries = ["United States", "Canada"]
+countries = [] #["United States", "Canada"]
 
 for col in world_data.columns:
     if "exports" in col:
         countries.append(col[25:-8])
         country_list.append(col[25:-8])
+        
+countries.sort()
 
 ex_style = [
     {
